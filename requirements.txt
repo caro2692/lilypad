@@ -1,3 +1,4 @@
+Django==1.9.13
 altgraph==0.16.1
 dis3==0.1.2
 docx==0.2.4
