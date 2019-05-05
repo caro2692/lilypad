@@ -8,6 +8,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('patient', '0001_initial'),
     ]
 
     operations = [
@@ -57,7 +58,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=128)),
-                ('type', models.CharField(max_length=36)),
+                ('event_type', models.CharField(max_length=36)),
             ],
             options={
             },
@@ -65,19 +66,25 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='event',
-            name='type_id',
+            name='event_type',
             field=models.ForeignKey(to='event.EventType'),
             preserve_default=True,
         ),
         migrations.AddField(
+            model_name='event',
+            name='patient',
+            field=models.ForeignKey(to='patient.Patient'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
             model_name='bloodketoneevent',
-            name='event_id',
+            name='event',
             field=models.ForeignKey(to='event.Event'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='bloodglucoseevent',
-            name='event_id',
+            name='event',
             field=models.ForeignKey(to='event.Event'),
             preserve_default=True,
         ),
