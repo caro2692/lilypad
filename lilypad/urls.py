@@ -15,5 +15,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^patient/', include('patient.urls')),
+    url(r'^event/', include('event.urls')),
     url(r'^admin/', admin.site.urls),
 ]

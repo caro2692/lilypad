@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'patient',
+    'event',
 )
 
 MIDDLEWARE_CLASSES = (
