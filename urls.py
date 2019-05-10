@@ -1,20 +1,12 @@
-# from django.conf.urls import patterns, include, url
-# from django.contrib import admin
-
-# urlpatterns = patterns('',
-#     # Examples:
-#     # url(r'^$', 'lilypad.views.home', name='home'),
-#     # url(r'^blog/', include('blog.urls')),
-
-#     url(r'^admin/', include(admin.site.urls)),
-# )
-
-
 from django.conf.urls import include, url
 from django.contrib import admin
+from rest_framework import routers
+from apps.patient import views
+
+router = routers.DefaultRouter()
+router.register(r'patients', views.PatientView, 'patient')
 
 urlpatterns = [
-    url(r'^patient/', include('apps.patient.urls')),
-    url(r'^event/', include('apps.event.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^api/', include(router.urls)),
 ]
