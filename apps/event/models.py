@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-from patient.models import Patient
+from apps.patient.models import Patient
 
 
 class EventType(models.Model):

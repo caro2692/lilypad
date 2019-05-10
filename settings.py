@@ -37,8 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'patient',
-    'event',
+    'apps.patient',
+    'apps.event',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -51,9 +51,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'lilypad.urls'
+ROOT_URLCONF = 'urls'
 
-WSGI_APPLICATION = 'lilypad.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database

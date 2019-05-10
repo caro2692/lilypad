@@ -14,7 +14,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^patient/', include('patient.urls')),
-    url(r'^event/', include('event.urls')),
+    url(r'^patient/', include('apps.patient.urls')),
+    url(r'^event/', include('apps.event.urls')),
     url(r'^admin/', admin.site.urls),
 ]
