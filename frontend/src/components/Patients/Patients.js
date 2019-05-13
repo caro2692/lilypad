@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { Table } from 'semantic-ui-react'
 
@@ -27,6 +28,9 @@ class Patients extends Component {
         <Table.Cell>{ patient.name }</Table.Cell>
         <Table.Cell>{ patient.tidepool_username }</Table.Cell>
         <Table.Cell>{ patient.tidepool_userid }</Table.Cell>
+        <Table.Cell>
+          <Link to="/events">Events</Link>
+        </Table.Cell>
       </Table.Row>
     ))
   }
@@ -41,6 +45,7 @@ class Patients extends Component {
               <Table.HeaderCell>Name</Table.HeaderCell>
               <Table.HeaderCell>Tidepool Username</Table.HeaderCell>
               <Table.HeaderCell>Tidepool ID</Table.HeaderCell>
+              <Table.HeaderCell></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
 
