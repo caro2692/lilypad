@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import { Table } from 'semantic-ui-react'
+import { Icon, Table } from 'semantic-ui-react'
+import './Patients.css'
 
 class Patients extends Component {
   constructor(props) {
@@ -29,7 +30,10 @@ class Patients extends Component {
         <Table.Cell>{ patient.tidepool_username }</Table.Cell>
         <Table.Cell>{ patient.tidepool_userid }</Table.Cell>
         <Table.Cell>
-          <Link to="/events">Events</Link>
+          <Link to={`/events/${patient.id}`}>
+            Events
+            <Icon name="arrow circle right alternate outline"/>
+          </Link>
         </Table.Cell>
       </Table.Row>
     ))
@@ -39,7 +43,7 @@ class Patients extends Component {
     return (
       <div>
         <h1>Patients</h1>
-        <Table celled>
+        <Table celled className="patient-table">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Name</Table.HeaderCell>
