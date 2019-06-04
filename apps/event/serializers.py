@@ -11,8 +11,6 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = (
             'id',
-            'name',
-            'event_type',
             'active',
             'device_id',
             'tidepool_id',
@@ -31,7 +29,15 @@ class BloodGlucoseEventSerializer(serializers.ModelSerializer):
         model = BloodGlucoseEvent
         fields = (
             'id',
-            'event',
+            'active',
+            'device_id',
+            'tidepool_id',
+            'tidepool_guid',
+            'time',
+            'timezone_offset',
+            'upload_id',
+            'created_at',
+            'updated_at',
             'value',
             'units'
         )
@@ -43,7 +49,15 @@ class BloodKetoneEventSerializer(serializers.ModelSerializer):
         model = BloodKetoneEvent
         fields = (
             'id',
-            'event',
+            'active',
+            'device_id',
+            'tidepool_id',
+            'tidepool_guid',
+            'time',
+            'timezone_offset',
+            'upload_id',
+            'created_at',
+            'updated_at',
             'value',
             'units',
             'subtype'

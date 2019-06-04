@@ -4,14 +4,8 @@ from django.utils import timezone
 from apps.patient.models import Patient
 
 
-class EventType(models.Model):
-    name = models.CharField(max_length=128)
-    event_type = models.CharField(max_length=36)
-
-
 class Event(models.Model):
     patient = models.ForeignKey(Patient)
-    event_type = models.ForeignKey(EventType)
     active = models.BooleanField(default=True)
     device_id = models.CharField(max_length=36)
     tidepool_id = models.CharField(max_length=36)
@@ -23,14 +17,12 @@ class Event(models.Model):
     updated_at = models.DateTimeField(default=timezone.now)
 
 
-class BloodGlucoseEvent(models.Model):
-    event = models.ForeignKey(Event)
+class BloodGlucoseEvent(Event):
     value = models.FloatField(default=0.0)
     units = models.CharField(max_length=24, default='mmol/L')
 
 
-class BloodKetoneEvent(models.Model):
-    event = models.ForeignKey(Event)
+class BloodKetoneEvent(Event):
     value = models.FloatField(default=0.0)
     units = models.CharField(max_length=24, default='mmol/L')
     subtype = models.CharField(max_length=36, blank=True)
