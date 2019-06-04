@@ -1,24 +1,41 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import { Icon, Table } from 'semantic-ui-react'
+import { Form, Header, Icon, Input, Table } from 'semantic-ui-react'
 import './Patients.css'
 
 class Patients extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      patients: []
+      patients: [],
+      tidepoolID: '',
+      patientExists: false,
     }
+
+    this.handleIDChange = this.handleIDChange.bind(this)
   }
 
   componentDidMount() {
     this.getPatients()
   }
 
+  handleIDChange(event) {
+    this.setState({tidepoolID: event.target.value})
+  }
+
   getPatients = () => {
     axios.get('/api/patient/')
       .then(resp => this.setState({ patients: resp.data }))
+      .catch(err => console.log(err))
+  }
+
+  addPatient = () => {
+    axios.post(`/api/patient/${this.state.tidepoolID}/add_from_tidepool/`)
+      .then(resp => {
+        this.getPatients()
+        this.setState({ patientExists: resp.status === 201 })
+      })
       .catch(err => console.log(err))
   }
 
@@ -43,6 +60,22 @@ class Patients extends Component {
     return (
       <div>
         <h1>Patients</h1>
+        <Form onSubmit={this.addPatient}>
+          <Form.Group>
+            <Form.Field inline>
+              <label>Add patient by Tidepool ID:</label>
+              <Input placeholder="Tidepool ID"
+                  value={this.state.tidepoolID}
+                  onChange={this.handleIDChange} />
+            </Form.Field>
+            <Form.Button primary type='submit'>
+              Add Patient
+            </Form.Button>
+            <Header size='small' color='red' floated='right'>
+              {this.state.patientExists ? 'Patient already exists' : null}
+            </Header>
+          </Form.Group>
+        </Form>
         <Table celled className="patient-table">
           <Table.Header>
             <Table.Row>
