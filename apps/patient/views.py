@@ -1,6 +1,5 @@
 import requests
 
-from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -55,11 +54,12 @@ class PatientView(viewsets.ModelViewSet):
     def add_events(self, request, pk=None):
         patient = self.get_object()
         base_url = 'https://int-api.tidepool.org/data/{}/'.format(patient.tidepool_userid)
-        # TODO: get from request params
+        startDate = request.data.get('startDate')
+        endDate = request.data.get('endDate')
         params = {
             'type': 'smbg',
-            'startDate': '2017-04-01T00:00:00.000Z',
-            'endDate': '2017-04-10T00:00:00.000Z'
+            'startDate': startDate,
+            'endDate': endDate
         }
         headers = {'x-tidepool-session-token': TIDEPOOL_SESSION_TOKEN}
         tidepool_resp = requests.get(base_url, params=params, headers=headers)

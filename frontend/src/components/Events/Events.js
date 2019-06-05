@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Form, Input, Table } from 'semantic-ui-react'
+import { Form, Table } from 'semantic-ui-react'
+import { DateInput } from 'semantic-ui-calendar-react'
 import moment from 'moment'
 
 class Events extends Component {
@@ -12,10 +13,15 @@ class Events extends Component {
       startDate: '',
       endDate: '',
     }
+    this.handleDateChange = this.handleDateChange.bind(this)
   }
 
   componentDidMount() {
     this.getEventsForPatient()
+  }
+
+  handleDateChange(event, {name, value}) {
+    this.setState({ [name]: value })
   }
 
   getEventsForPatient = () => {
@@ -25,11 +31,14 @@ class Events extends Component {
   }
 
   addEvents = () => {
-    axios.post(`/api/patient/${this.state.patientId}/add_events/`)
-      .then(resp => {
-        console.log('resp', resp)
-        this.getEventsForPatient()
-      })
+    let { startDate, endDate } = this.state
+    startDate = moment(startDate).format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z'
+    endDate = moment(endDate).format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z'
+    axios.post(
+      `/api/patient/${this.state.patientId}/add_events/`,
+      { startDate, endDate }
+    )
+      .then(resp => { this.getEventsForPatient() })
       .catch(err => console.log(err))
   }
 
@@ -55,18 +64,23 @@ class Events extends Component {
         <h1>Events</h1>
         <Form onSubmit={this.addEvents}>
           <Form.Group>
-            <Form.Field inline>
-              <label>From:</label>
-              <Input placeholder="Start Date"
-                  value={this.state.startDate}
-                  onChange={this.handleChange} />
-            </Form.Field>
-            <Form.Field inline>
-              <label>To</label>
-              <Input placeholder="End Date"
-                  value={this.state.endDate}
-                  onChange={this.handleChange} />
-            </Form.Field>
+            <DateInput
+                label="From"
+                name="startDate"
+                dateFormat="M/D/YYYY"
+                placeholder="Start Date"
+                inlineLabel="true"
+                iconPosition="left"
+                value={this.state.startDate}
+                onChange={this.handleDateChange} />
+            <DateInput
+                label="To"
+                name="endDate"
+                placeholder="End Date"
+                inlineLabel="true"
+                iconPosition="left"
+                value={this.state.endDate}
+                onChange={this.handleDateChange} />
             <Form.Button primary type='submit'>
               Add Events
             </Form.Button>
