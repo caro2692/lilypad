@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { Table } from 'semantic-ui-react'
+import { Form, Input, Table } from 'semantic-ui-react'
 import moment from 'moment'
 
 class Events extends Component {
@@ -8,7 +8,9 @@ class Events extends Component {
     super(props)
     this.state = {
       patientId : props.match.params.id,
-      events: []
+      events: [],
+      startDate: '',
+      endDate: '',
     }
   }
 
@@ -19,6 +21,15 @@ class Events extends Component {
   getEventsForPatient = () => {
     axios.get(`/api/patient/${this.state.patientId}/events`)
       .then(resp => this.setState({ events: resp.data }))
+      .catch(err => console.log(err))
+  }
+
+  addEvents = () => {
+    axios.post(`/api/patient/${this.state.patientId}/add_events/`)
+      .then(resp => {
+        console.log('resp', resp)
+        this.getEventsForPatient()
+      })
       .catch(err => console.log(err))
   }
 
@@ -42,6 +53,25 @@ class Events extends Component {
     return (
       <div>
         <h1>Events</h1>
+        <Form onSubmit={this.addEvents}>
+          <Form.Group>
+            <Form.Field inline>
+              <label>From:</label>
+              <Input placeholder="Start Date"
+                  value={this.state.startDate}
+                  onChange={this.handleChange} />
+            </Form.Field>
+            <Form.Field inline>
+              <label>To</label>
+              <Input placeholder="End Date"
+                  value={this.state.endDate}
+                  onChange={this.handleChange} />
+            </Form.Field>
+            <Form.Button primary type='submit'>
+              Add Events
+            </Form.Button>
+          </Form.Group>
+        </Form>
         <Table celled className="patient-table">
           <Table.Header>
             <Table.Row>

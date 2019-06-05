@@ -1,5 +1,6 @@
 import requests
 
+from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -30,13 +31,12 @@ class PatientView(viewsets.ModelViewSet):
 
     @detail_route(methods=['post'])
     def add_from_tidepool(self, request, pk=None):
-        base_url = 'https://int-api.tidepool.org/metadata/users/{}/users?userid={}'.format(
-            TIDEPOOL_USER_ID, pk
+        base_url = 'https://int-api.tidepool.org/metadata/users/{}/users'.format(
+            TIDEPOOL_USER_ID
         )
-        headers = {
-            'x-tidepool-session-token': TIDEPOOL_SESSION_TOKEN
-        }
-        tidepool_resp = requests.get(base_url, headers=headers)
+        params = {'userid': pk}
+        headers = {'x-tidepool-session-token': TIDEPOOL_SESSION_TOKEN}
+        tidepool_resp = requests.get(base_url, params=params, headers=headers)
         user = tidepool_resp.json()[0]
         patient, created = Patient.objects.get_or_create(
             name=user['profile']['fullName'],
@@ -48,5 +48,36 @@ class PatientView(viewsets.ModelViewSet):
 
         if patient and not created:
             return Response(serializer.data, status=HTTP_201_CREATED)
+
+        return Response(serializer.data)
+
+    @detail_route(methods=['post'])
+    def add_events(self, request, pk=None):
+        patient = self.get_object()
+        base_url = 'https://int-api.tidepool.org/data/{}/'.format(patient.tidepool_userid)
+        # TODO: get from request params
+        params = {
+            'type': 'smbg',
+            'startDate': '2017-04-01T00:00:00.000Z',
+            'endDate': '2017-04-10T00:00:00.000Z'
+        }
+        headers = {'x-tidepool-session-token': TIDEPOOL_SESSION_TOKEN}
+        tidepool_resp = requests.get(base_url, params=params, headers=headers)
+        events = tidepool_resp.json()
+        for event in events:
+            # TODO: different types of events
+            event, created = BloodGlucoseEvent.objects.get_or_create(
+                patient=patient,
+                active=True,
+                device_id=event['deviceId'],
+                tidepool_id=event['id'],
+                tidepool_guid=event['guid'],
+                time=event['time'],
+                timezone_offset=event['timezoneOffset'],
+                upload_id=event['uploadId'],
+                value=event['value'],
+                units=event['units']
+            )
+        serializer = PatientSerializer(patient)
 
         return Response(serializer.data)
