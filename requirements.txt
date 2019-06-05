@@ -14,6 +14,7 @@ PyInstaller==3.4
 Pypubsub==4.0.0
 python-dateutil==2.7.3
 python-docx==0.8.7
+requests==2.18.4
 six==1.11.0
 virtualenv==16.4.3
 wxPython==4.0.3

@@ -1,3 +1,5 @@
+import requests
+
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -8,6 +10,10 @@ from apps.event.serializers import BloodGlucoseEventSerializer
 
 from .serializers import PatientSerializer
 from .models import Patient
+
+
+TIDEPOOL_SESSION_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkdXIiOjI1OTIwMDAsImV4cCI6MTU2MjMzNzk4Nywic3ZyIjoibm8iLCJ1c3IiOiIzMTM2NjIyNGMwIn0.d5r4NworAkwztdovDmwdFNuE74qv1vrDTHv5vuoC4i4'
+TIDEPOOL_USER_ID = '31366224c0'
 
 
 class PatientView(viewsets.ModelViewSet):
@@ -24,12 +30,19 @@ class PatientView(viewsets.ModelViewSet):
 
     @detail_route(methods=['post'])
     def add_from_tidepool(self, request, pk=None):
-        # TODO: pull patient from Tidepool api by pk
+        base_url = 'https://int-api.tidepool.org/metadata/users/{}/users?userid={}'.format(
+            TIDEPOOL_USER_ID, pk
+        )
+        headers = {
+            'x-tidepool-session-token': TIDEPOOL_SESSION_TOKEN
+        }
+        tidepool_resp = requests.get(base_url, headers=headers)
+        user = tidepool_resp.json()[0]
         patient, created = Patient.objects.get_or_create(
-            name='Todd Test',
+            name=user['profile']['fullName'],
             active=True,
             tidepool_userid=pk,
-            tidepool_username='blah'
+            tidepool_username=user['username']
         )
         serializer = PatientSerializer(patient)
 
