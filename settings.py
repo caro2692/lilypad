@@ -40,6 +40,7 @@ INSTALLED_APPS = (
 
     'apps.patient',
     'apps.event',
+    'apps.report',
 )
 
 MIDDLEWARE_CLASSES = (

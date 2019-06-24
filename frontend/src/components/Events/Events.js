@@ -84,6 +84,9 @@ class Events extends Component {
             <Form.Button primary type='submit'>
               Add Events
             </Form.Button>
+            <Form.Button type='button'>
+              Create Report
+            </Form.Button>
           </Form.Group>
         </Form>
         <Table celled className="patient-table">
