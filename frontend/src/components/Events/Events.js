@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 import { Form, Table } from 'semantic-ui-react'
 import { DateInput } from 'semantic-ui-calendar-react'
 import moment from 'moment'
@@ -31,6 +32,10 @@ class Events extends Component {
     return { startDate, endDate }
   }
 
+  getReportParams() {
+    return `?patient=${this.state.patientId}&startDate=${this.state.startDate}&endDate=${this.state.endDate}`
+  }
+
   getEventsForPatient = () => {
     axios.get(`/api/patient/${this.state.patientId}/events`)
       .then(resp => this.setState({ events: resp.data }))
@@ -44,14 +49,6 @@ class Events extends Component {
       { startDate, endDate }
     )
       .then(resp => { this.getEventsForPatient() })
-      .catch(err => console.log(err))
-  }
-
-  getReport = () => {
-    const { startDate, endDate } = this.formatDates()
-    const params = { patient: this.state.patientId, startDate, endDate }
-    axios.get('/api/blood_glucose_report/', { params })
-      .then(resp => { console.log('resp', resp) })
       .catch(err => console.log(err))
   }
 
@@ -89,15 +86,17 @@ class Events extends Component {
             <DateInput
                 label="To"
                 name="endDate"
+                dateFormat="M/D/YYYY"
                 placeholder="End Date"
                 inlineLabel="true"
                 iconPosition="left"
                 value={this.state.endDate}
                 onChange={this.handleDateChange} />
-            <Form.Button primary type='submit'
-                onClick={this.getReport}>
-              Create Report
-            </Form.Button>
+            <Link to={`/report/${this.getReportParams()}`}>
+              <Form.Button primary type='submit'>
+                Create Report
+              </Form.Button>
+            </Link>
             <Form.Button type='button'>
               Add Events
             </Form.Button>

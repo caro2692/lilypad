@@ -4,6 +4,7 @@ import './App.css';
 import logo from './logo.png'
 import Patients from './components/Patients/Patients'
 import Events from './components/Events/Events'
+import BloodGlucoseReport from './components/Reports/BloodGlucoseReport'
 import { Container, Menu } from 'semantic-ui-react'
 
 class App extends Component {
@@ -27,6 +28,7 @@ class App extends Component {
           <Container className="main">
             <Route exact path="/" component={Patients} />
             <Route path="/events/:id" component={Events} />
+            <Route path="/report/" component={BloodGlucoseReport} />
           </Container>
         </div>
       </Router>
