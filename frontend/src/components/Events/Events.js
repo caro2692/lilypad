@@ -24,6 +24,13 @@ class Events extends Component {
     this.setState({ [name]: value })
   }
 
+  formatDates() {
+    let { startDate, endDate } = this.state
+    startDate = moment(startDate).format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z'
+    endDate = moment(endDate).format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z'
+    return { startDate, endDate }
+  }
+
   getEventsForPatient = () => {
     axios.get(`/api/patient/${this.state.patientId}/events`)
       .then(resp => this.setState({ events: resp.data }))
@@ -31,14 +38,20 @@ class Events extends Component {
   }
 
   addEvents = () => {
-    let { startDate, endDate } = this.state
-    startDate = moment(startDate).format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z'
-    endDate = moment(endDate).format('YYYY-MM-DDTHH:mm:ss.SSS') + 'Z'
+    const { startDate, endDate } = this.formatDates()
     axios.post(
       `/api/patient/${this.state.patientId}/add_events/`,
       { startDate, endDate }
     )
       .then(resp => { this.getEventsForPatient() })
+      .catch(err => console.log(err))
+  }
+
+  getReport = () => {
+    const { startDate, endDate } = this.formatDates()
+    const params = { patient: this.state.patientId, startDate, endDate }
+    axios.get('/api/blood_glucose_report/', { params })
+      .then(resp => { console.log('resp', resp) })
       .catch(err => console.log(err))
   }
 
@@ -81,11 +94,12 @@ class Events extends Component {
                 iconPosition="left"
                 value={this.state.endDate}
                 onChange={this.handleDateChange} />
-            <Form.Button primary type='submit'>
-              Add Events
+            <Form.Button primary type='submit'
+                onClick={this.getReport}>
+              Create Report
             </Form.Button>
             <Form.Button type='button'>
-              Create Report
+              Add Events
             </Form.Button>
           </Form.Group>
         </Form>
