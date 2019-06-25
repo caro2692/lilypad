@@ -1,4 +1,4 @@
-import statistics
+import pandas as pd
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,15 +17,15 @@ class BloodGlucoseReportView(APIView):
         events = BloodGlucoseEvent.objects.filter(
             patient=patient,
             time__range=(startDate, endDate)
-        )
+        ).order_by('time')
 
-        ordered_events = events.order_by('value')
-        values = [e.value for e in ordered_events]
+        df = pd.DataFrame(list(events).values('value', 'units', 'time', 'id'))
+        df['date'] = df.apply(lambda row: row.time.date(), axis=1)
 
         resp = {
-            'average_per_day': statistics.mean(values),
-            'lowest_per_day': ordered_events.first().value,
-            'highest_per_day': ordered_events.last().value
+            'average_per_day': df['date'].value_counts().mean(),
+            'lowest_per_day': df['date'].value_counts().min(),
+            'highest_per_day': df['date'].value_counts().max()
         }
 
         return Response(resp)
