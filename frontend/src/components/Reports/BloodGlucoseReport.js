@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import queryString from 'query-string'
 import axios from 'axios'
-import { Statistic } from 'semantic-ui-react'
+import { Header, Segment, Statistic } from 'semantic-ui-react'
 import moment from 'moment'
 
 class BloodGlucoseReport extends Component {
@@ -39,28 +39,50 @@ class BloodGlucoseReport extends Component {
       .catch(err => console.log(err))
   }
 
+  statColor(val, low = 2, high = 4) {
+    return {
+      'red': val <= low,
+      'orange': low < val < high,
+      'green': val >= high,
+    }
+  }
+
   render() {
     return (
-      <Statistic.Group widths='three'>
-        <Statistic color='blue'>
-          <Statistic.Value>
-            {Number(this.state.report.average_per_day).toFixed(1)}
-          </Statistic.Value>
-          <Statistic.Label>Average # BG checks/day</Statistic.Label>
-        </Statistic>
-        <Statistic color='red'>
-          <Statistic.Value>
-            {Number(this.state.report.lowest_per_day).toFixed(1)}
-          </Statistic.Value>
-          <Statistic.Label>Lowest # BG checks/day</Statistic.Label>
-        </Statistic>
-        <Statistic color='green'>
-          <Statistic.Value>
-            {Number(this.state.report.highest_per_day).toFixed(1)}
-          </Statistic.Value>
-          <Statistic.Label>Highest # BG checks/day</Statistic.Label>
-        </Statistic>
-      </Statistic.Group>
+      <div>
+        <Header as='h1' dividing>{this.state.report.patient_name}
+          <Header.Subheader>
+            {moment(this.state.startDate).format('M/D/YYYY')} to {moment(this.state.endDate).format('M/D/YYYY')}
+          </Header.Subheader>
+        </Header>
+        <Segment.Group>
+          <Segment secondary>
+            <h3>Blood Glucose Checks</h3>
+          </Segment>
+          <Segment>
+            <Statistic.Group widths='three'>
+              <Statistic color={this.statColor(this.state.report.average_per_day)}>
+                <Statistic.Value>
+                  {Number(this.state.report.average_per_day).toFixed(1)}
+                </Statistic.Value>
+                <Statistic.Label>Average # BG checks/day</Statistic.Label>
+              </Statistic>
+              <Statistic color={this.statColor(this.state.report.lowest_per_day)}>
+                <Statistic.Value>
+                  {Number(this.state.report.lowest_per_day).toFixed(1)}
+                </Statistic.Value>
+                <Statistic.Label>Lowest # BG checks/day</Statistic.Label>
+              </Statistic>
+              <Statistic color={this.statColor(this.state.report.highest_per_day)}>
+                <Statistic.Value>
+                  {Number(this.state.report.highest_per_day).toFixed(1)}
+                </Statistic.Value>
+                <Statistic.Label>Highest # BG checks/day</Statistic.Label>
+              </Statistic>
+            </Statistic.Group>
+          </Segment>
+        </Segment.Group>
+      </div>
     )
   }
 }

@@ -19,10 +19,13 @@ class BloodGlucoseReportView(APIView):
             time__range=(startDate, endDate)
         ).order_by('time')
 
-        df = pd.DataFrame(list(events).values('value', 'units', 'time', 'id'))
+        # create pandas dataframe
+        df = pd.DataFrame(list(events.values('value', 'units', 'time', 'id')))
+        # add column for date
         df['date'] = df.apply(lambda row: row.time.date(), axis=1)
 
         resp = {
+            'patient_name': patient.name,
             'average_per_day': df['date'].value_counts().mean(),
             'lowest_per_day': df['date'].value_counts().min(),
             'highest_per_day': df['date'].value_counts().max()

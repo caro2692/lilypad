@@ -97,7 +97,7 @@ class Events extends Component {
                 Create Report
               </Form.Button>
             </Link>
-            <Form.Button type='button'>
+            <Form.Button type='submit'>
               Add Events
             </Form.Button>
           </Form.Group>
