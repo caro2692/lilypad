@@ -4,7 +4,7 @@ altgraph==0.16.1
 dis3==0.1.2
 docx==0.2.4
 future==0.17.1
-lxml==4.2.5
+lxml==4.6.2
 macholib==1.11
 numpy==1.15.1
 pandas==0.24.2
