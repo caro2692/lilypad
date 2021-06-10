@@ -1,4 +1,4 @@
-Django==1.11.20
+Django==2.2.24
 djangorestframework==3.9.4
 altgraph==0.16.1
 dis3==0.1.2
